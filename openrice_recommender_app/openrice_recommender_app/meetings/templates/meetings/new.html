@@ -1,0 +1,14 @@
+{% extends 'meetings/base.html' %}
+
+{% block title %}New Meeting{% endblock %}
+
+{% block content %}
+<h1>New Meeting</h1>
+<form method="post">
+    <table>
+        {{form}}
+    </table>
+    {% csrf_token %}
+    <button class="btn btn-primary" type="submit">Create</button>
+</form>
+{% endblock %}

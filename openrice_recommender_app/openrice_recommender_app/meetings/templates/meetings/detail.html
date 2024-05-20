@@ -1,0 +1,20 @@
+{% extends 'meetings/base.html' %}
+
+{% block title %}Meeting: {{meeting.title}}{% endblock %}
+
+{% block content %}
+<h1>{{meeting.title}}</h1>
+<p>
+    <strong>Meeting ID:</strong> {{meeting.id}}
+</p>
+<p>
+    <strong>Meeting Date:</strong> {{meeting.date}}
+</p>
+<p>
+    <strong>Meeting Time:</strong> {{meeting.start_time}}
+</p>
+<p>
+    <strong>Meeting Room:</strong> {{meeting.room}}
+</p>
+<div><a href="{% url 'home' %}">Back to home</a></div>
+{% endblock %}

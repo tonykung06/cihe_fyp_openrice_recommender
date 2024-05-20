@@ -1,0 +1,45 @@
+body {
+    background-image: url('./background.png');
+}
+
+.container {
+    background-color: rgba(237, 231, 227, 0.8);
+}
+
+
+.jumbotron {
+    /* height: 30vh; */
+    background: url('./jumbotron.jpg') no-repeat fixed;
+    background-size: cover;
+}
+
+
+.carousel {
+    margin-bottom: 4rem;
+}
+
+.carousel-caption {
+    bottom: 3rem;
+    z-index: 10;
+}
+
+.carousel-item {
+    height: 32rem;
+    max-width: 100vw;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 100vw rgba(0, 0, 0, 0.3);
+}
+
+/* .welcome-carousel-image1 {
+    background-image: url('./carousel1.jpg');
+}
+
+.welcome-carousel-image2 {
+    background-image: url('./carousel2.jpg');
+}
+
+.welcome-carousel-image3 {
+    background-image: url('./carousel3.jpg');
+} */

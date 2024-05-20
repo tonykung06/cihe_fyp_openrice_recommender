@@ -1,0 +1,17 @@
+{% extends 'meetings/base.html' %}
+
+{% block title %}Room Detail {{room.title}}{% endblock %}
+
+{% block content %}
+<h1>{{room.title}}</h1>
+<p>
+    <strong>Room ID:</strong> {{room.id}}
+</p>
+<p>
+    <strong>Room floor:</strong> {{room.floor}}
+</p>
+<p>
+    <strong>Room number:</strong> {{room.room_number}}
+</p>
+<div><a href="{% url 'room_list' %}">Back to room list</a></div>
+{% endblock %}

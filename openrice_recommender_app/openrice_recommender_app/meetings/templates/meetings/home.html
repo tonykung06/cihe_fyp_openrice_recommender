@@ -1,0 +1,21 @@
+{% extends 'meetings/base.html' %}
+{% load static %}
+
+{% block title %}Meetings App{% endblock %}
+
+{% block content %}
+<h1>Welcome to Meetings App!</h1>
+<p>
+    {{message}}
+</p>
+<img src="{% static 'website/calendar.png' %}" class="rounded" width="50px" />
+<ul>
+    {% for meeting in meetings %}
+    <li>
+        <a href="{% url 'detail' meeting.id %}">{{meeting.title}}</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'new' %}">New Meeting</a> <br />
+<a href="{% url 'room_list' %}">Room List</a>
+{% endblock %}

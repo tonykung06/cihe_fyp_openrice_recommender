@@ -1,0 +1,495 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Restaurant Recommender{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-white">
+    <h1 class="display-4">Restaurant Recommender</h1>
+    <p class="lead">{{message}}</p>
+</div>
+<div class="form-group">
+    <input class="form-control" id="user-searchbox" placeholder="Search user" type="text" autocomplete="off">
+</div>
+
+<script>
+    const cuisines = [
+        ['15001', 'African'],
+        ['14001', 'American'],
+        ['14005', 'Argentinian'],
+        ['12022', 'Australian'],
+        ['13007', 'Austrian'],
+        ['11010', 'Beijing'],
+        ['13013', 'Belgian'],
+        ['14004', 'Brazilian'],
+        ['13009', 'British'],
+        ['11001', 'Chiu Chow'],
+        ['14003', 'Cuba'],
+        ['13008', 'Dutch'],
+        ['13021', 'Eastern Europe'],
+        ['15004', 'Egyptian'],
+        ['13010', 'French'],
+        ['11012', 'Fujian'],
+        ['13001', 'German'],
+        ['13034', 'Greek'],
+        ['11002', 'Guangdong'],
+        ['11026', 'Guangxi'],
+        ['11017', 'Guizhou'],
+        ['11005', 'Hakka'],
+        ['11004', 'Hong Kong Style'],
+        ['11032', 'Huaiyang'],
+        ['11024', 'Hubei'],
+        ['11013', 'Hunan'],
+        ['12006', 'Indian'],
+        ['12007', 'Indonesian'],
+        ['16000', 'International'],
+        ['13005', 'Irish'],
+        ['13006', 'Italian'],
+        ['12009', 'Japanese'],
+        ['13022', 'Jewish'],
+        ['11007', 'Jiang-Zhe'],
+        ['11018', 'Jingchuanhu'],
+        ['12001', 'Korean'],
+        ['12023', 'Lebanon'],
+        ['12024', 'Malaysian'],
+        ['13012', 'Mediterranean'],
+        ['14002', 'Mexican'],
+        ['12021', 'Middle Eastern'],
+        ['11014', 'Mongolia'],
+        ['15005', 'Moroccan'],
+        ['12008', 'Nepalese'],
+        ['11016', 'Northeastern'],
+        ['14006', 'Peruvian'],
+        ['12003', 'Philippines'],
+        ['13003', 'Portuguese'],
+        ['11021', 'Shandong'],
+        ['11011', 'Shanghai'],
+        ['11030', 'Shanxi (Jin)'],
+        ['11031', 'Shanxi (Shan)'],
+        ['11033', 'Shunde'],
+        ['11008', 'Sichuan'],
+        ['12005', 'Singaporean'],
+        ['13011', 'Spanish'],
+        ['12010', 'Sri Lankan'],
+        ['13004', 'Swiss'],
+        ['11009', 'Taiwan'],
+        ['12004', 'Thai'],
+        ['13033', 'Turkish'],
+        ['12002', 'Vietnamese'],
+        ['11027', 'Village Food'],
+        ['14000', 'Western'],
+        ['11015', 'Xinjiang'],
+        ['11003', 'Yunnan']
+
+    ];
+    const districts = [
+        ['1012', 'Aberdeen'],
+        ['1011', 'Admiralty'],
+        ['1020', 'Ap Lei Chau'],
+        ['1019', 'Causeway Bay'],
+        ['1003', 'Central'],
+        ['1013', 'Chai Wan'],
+        ['4002', 'Chek Lap Kok'],
+        ['4004', 'Cheung Chau'],
+        ['2013', 'Cheung Sha Wan'],
+        ['2032', 'Choi Hung'],
+        ['1016', 'Deep Water Bay'],
+        ['2027', 'Diamond Hill'],
+        ['4006', 'Discovery Bay'],
+        ['3008', 'Fanling'],
+        ['3013', 'Fo Tan'],
+        ['1017', 'Happy Valley'],
+        ['1024', 'Heng Fa Chuen'],
+        ['2009', 'Ho Man Tin'],
+        ['1999', 'Hong Kong Island'],
+        ['2015', 'Hung Hom'],
+        ['2028', 'Jordan'],
+        ['2003', 'Kowloon Bay'],
+        ['2001', 'Kowloon City'],
+        ['2002', 'Kowloon Tong'],
+        ['3019', 'Kwai Chung'],
+        ['3015', 'Kwai Fong'],
+        ['2026', 'Kwun Tong'],
+        ['2016', 'Lai Chi Kok'],
+        ['2024', 'Lam Tin'],
+        ['4001', 'Lantau Island'],
+        ['3016', 'Lau Fau shan'],
+        ['2025', 'Lei Yue Mun'],
+        ['3011', 'Lo Wu'],
+        ['2030', 'Lok Fu'],
+        ['3021', 'Lok Ma Chau'],
+        ['3009', 'Ma On Shan'],
+        ['3022', 'Ma Wan'],
+        ['2031', 'Mei Foo'],
+        ['1005', 'Mid-Levels'],
+        ['2010', 'Mong Kok'],
+        ['2006', 'Ngau Tau Kok'],
+        ['1004', 'North Point'],
+        ['4003', 'Peng Chau'],
+        ['4011', 'Po Toi Island'],
+        ['1021', 'Pok Fu Lam'],
+        ['2029', 'Prince Edward'],
+        ['1014', 'Quarry Bay'],
+        ['1015', 'Repulse Bay'],
+        ['3006', 'Sai Kung'],
+        ['1009', 'Sai Wan Ho'],
+        ['2022', 'San Po Kong'],
+        ['3007', 'Sha Tin'],
+        ['2019', 'Sham Shui Po'],
+        ['3010', 'Sham Tseng'],
+        ['1018', 'Shau Kei Wan'],
+        ['2007', 'Shek Kip Mei'],
+        ['1007', 'Shek O'],
+        ['3001', 'Sheung Shui'],
+        ['1001', 'Sheung Wan'],
+        ['1010', 'Stanley'],
+        ['1025', 'Tai Hang'],
+        ['2005', 'Tai Kok Tsui'],
+        ['1023', 'Tai Koo'],
+        ['4010', 'Tai O'],
+        ['3002', 'Tai Po'],
+        ['3012', 'Tai Wai'],
+        ['3014', 'Tai Wo'],
+        ['1002', 'The Peak'],
+        ['1026', 'Tin Hau'],
+        ['3004', 'Tin Shui Wai'],
+        ['2004', 'To Kwa Wan'],
+        ['3020', 'Tseung Kwan O'],
+        ['2008', 'Tsim Sha Tsui'],
+        ['3017', 'Tsing Yi'],
+        ['3018', 'Tsuen Wan'],
+        ['2021', 'Tsz Wan Shan'],
+        ['3005', 'Tuen Mun'],
+        ['4009', 'Tung Chung'],
+        ['1022', 'Wan Chai'],
+        ['1008', 'Western District'],
+        ['1027', 'Wong Chuk Hang'],
+        ['2020', 'Wong Tai Sin'],
+        ['2011', 'Yau Ma Tei'],
+        ['2012', 'Yau Tong'],
+        ['3003', 'Yuen Long']
+    ];
+    function setLoadingMask(element, loadingText = '') {
+        element.html(`
+            <div class="d-flex justify-content-center align-items-center p-5">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <strong class="mx-2">${loadingText}</strong>
+            </div>
+        `)
+    }
+    function handleDistrictSelected(evt, item, district = '', cuisine = '') {
+        renderRecommendations(evt, item, district, cuisine);
+    }
+    function handleCuisineSelected(evt, item, district = '', cuisine = '') {
+        renderRecommendations(evt, item, district, cuisine);
+    }
+    function renderRecommendations(evt, item, district = '', cuisine = '') {
+        setLoadingMask($('#recommendations'), 'Loading recommendations...');
+        setLoadingMask($('#recommendations-lg'), 'Loading recommendations...');
+        let apiUrl = `/users/${item.id}/restaurants/?limit=10`;
+        if (district) {
+            apiUrl += `&district__name=${district}`;
+        }
+        if (cuisine) {
+            apiUrl += `&categories__name=${cuisine}`;
+        }
+        $.ajax(apiUrl).done(function (res) {
+            const recommendationsLgRows = [];
+            const indicators = [];
+            const carouselItems = [];
+            for (let i = 0; i < res.data.length; i++) {
+                const restaurantId = res.data[i].id;
+                const restaurant = res.data[i].attributes;
+                const cuisineBadges = restaurant.categories ? restaurant.categories.filter(v => v.category_type_key === 'cuisineId').map(c => `<span class="badge badge-info badge-pill">${c.name}</span>`) : [];
+
+                recommendationsLgRows.push(`
+                <div class="container p-4 mb-5 rounded shadow-lg">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3>${restaurant.name}</h3>
+                            <h5>${restaurant.district ? restaurant.district.name : ''}</h5>
+                            <p>${restaurant.address}</p>
+                            ${cuisineBadges.join(' ')}
+                        </div>
+                        <div class="col-md-4">
+                            <img src="${restaurant.image_url}"
+                                class="img-fluid rounded-lg float-md-right">
+                        </div>
+                    </div>
+                </div>
+                `);
+                // max the carousel to 5 items
+                if (i > 4) {
+                    continue
+                }
+                indicators.push(`
+                <li data-target="#welcomeCarousel" data-slide-to="${i}" class="${i === 0 ? 'active' : ''}"></li>
+                `)
+                carouselItems.push(`
+                <div class="carousel-item ${i === 0 ? 'active' : ''}" style="background-image: url(${restaurant.image_url})">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>${restaurant.name}</h1>
+                            <p>${restaurant.district ? restaurant.district.name : ''}</p>
+                            <p>${restaurant.address}</p>
+                        </div>
+                    </div>
+                </div>
+                `)
+            };
+
+            const districtOptions = [
+                `<option value="" ${district ? '' : 'selected'} name="">Choose a district...</option>`
+            ]
+            for (let [id, name] of districts) {
+                districtOptions.push(`
+                <option value="${id}" ${district === name ? 'selected' : ''}>${name}</option>
+                `)
+            }
+            const districtSelect = $(`
+            <select class="custom-select" id="district-select" aria-label="Select a district">
+                ${districtOptions.join('')}
+            </select>
+            `);
+
+            districtSelect.on('change', function (e) {
+                let district = $(this).children("option:selected").text();
+                if (district === 'Choose a district...') {
+                    district = '';
+                }
+                handleDistrictSelected(evt, item, district, cuisine);
+            });
+
+            const cuisineOptions = [
+                `<option value="" ${cuisine ? '' : 'selected'} name="">Choose a cuisine...</option>`
+            ]
+            for (let [id, name] of cuisines) {
+                cuisineOptions.push(`
+                <option value="${id}" ${cuisine === name ? 'selected' : ''}>${name}</option>
+                `)
+            }
+            const cuisineSelect = $(`
+            <select class="custom-select ml-1" id="cuisine-select" aria-label="Select a cuisine">
+                ${cuisineOptions.join('')}
+            </select>
+            `);
+
+            cuisineSelect.on('change', function (e) {
+                let cuisine = $(this).children("option:selected").text();
+                if (cuisine === 'Choose a cuisine...') {
+                    cuisine = '';
+                }
+                handleCuisineSelected(evt, item, district, cuisine);
+            });
+
+            const selects = $(`
+            <div class="input-group mb-3">
+            </div>
+            `);
+            selects.append(districtSelect);
+            selects.append(cuisineSelect);
+
+            $('#recommendations-lg').html(`
+            <h2>Recommendations <small>to ${item.attributes.name}</small></h2>
+            ${recommendationsLgRows.join('')}
+            `);
+            $('#recommendations-lg > h2').after(selects);
+
+            $('#recommendations').html(`
+            <div id="welcomeCarousel" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    ${indicators.join('')}
+                </ol>
+                <div class="carousel-inner">
+                    ${carouselItems.join('')}
+                </div>
+                <a class="carousel-control-prev" href="#welcomeCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#welcomeCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            `)
+        });
+    }
+    document.addEventListener('DOMContentLoaded', e => {
+        // this is a token for demo purpose
+        $.ajaxSetup({
+            headers: { 'Authorization': 'Token 8cfcb1700dd744ac127b7c66f0220738351b0a63' }
+        });
+
+        const preSelectedUserCount = 3;
+
+        // recommendations to some pre-selected users on front page
+        const preSelectedUsers = [
+            { name: "fai0826", id: 105067 },
+            { name: "lucylaihk", id: 161686 },
+            { name: "Jjccaa", id: 427913 },
+            { name: "天天食好野", id: 64755 },
+            { name: "supersupergirl", id: 33189 },
+            { name: "Pcsy", id: 714007 },
+            { name: "SMASHING PUMPKINS", id: 1644 },
+            { name: "lokyanyan", id: 486950 }
+        ].splice(0, preSelectedUserCount);
+
+        const recommendationsForPreselectedUsers = {};
+        setLoadingMask($('#front-page'), 'Loading front page...');
+        for (let { id: userId, name: userName } of preSelectedUsers) {
+            $.ajax(
+                `/users/${userId}/restaurants/?limit=3`
+            ).done(function (res) {
+                recommendationsForPreselectedUsers[userId] = res;
+                if (Object.keys(recommendationsForPreselectedUsers).length === preSelectedUsers.length) {
+                    const frontPageContents = [];
+                    for (let { id: userId, name: userName } of preSelectedUsers) {
+                        const data = recommendationsForPreselectedUsers[userId].data;
+                        const recommendationItems = [];
+                        const itemLimit = Math.min(3, data ? data.length : 0);
+                        for (let i = 0; i < itemLimit; i++) {
+                            const item = data[i];
+                            const restaurantId = item.id;
+                            const restaurant = item.attributes;
+                            const cuisineBadges = restaurant.categories ? restaurant.categories.filter(v => v.category_type_key === 'cuisineId').map(c => `<span class="badge badge-info badge-pill">${c.name}</span>`) : [];
+                            recommendationItems.push(`
+                            <div class="container p-4 rounded shadow-lg col-lg col-12 mb-3 ${i === itemLimit - 1 ? '' : 'mr-3'}">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h3>${restaurant.name}</h3>
+                                        <h5>${restaurant.district ? restaurant.district.name : ''}</h5>
+                                        <p>${restaurant.address}</p>
+                                        ${cuisineBadges.join(' ')}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img src="${restaurant.image_url}"
+                                            class="img-fluid rounded-lg float-md-right">
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                        }
+                        frontPageContents.push(`
+                            <div class="row mb-5">
+                                <h2 class="col-12">Recommendations <small>to ${userName}</small></h2>
+                                ${recommendationItems.join('')}
+                            </div>
+                        `);
+                    }
+                    $('#front-page').html(`
+                        <div class="container">
+                            ${frontPageContents.join('')}
+                        </div>
+                    `)
+                }
+            })
+        }
+
+        $('#user-searchbox').on('autocomplete.select', function (evt, item) {
+            $('#front-page').addClass('d-none');
+
+            renderRecommendations(evt, item);
+
+            setLoadingMask($('#reviews'), "Loading reviews...");
+
+            $.ajax(
+                `/users/${item.id}/reviews/`
+            ).done(function (res) {
+                const reviews = [`<h2>Past Reviews <small>by ${item.attributes.name}</small></h2>`];
+                for (let review of res.data) {
+                    const reviewData = review.attributes;
+                    const restaurantData = reviewData.restaurant;
+                    const cuisineBadges = restaurantData.categories ? restaurantData.categories.filter(v => v.category_type_key === 'cuisineId').map(c => `<span class="badge badge-info badge-pill">${c.name}</span>`) : [];
+
+                    reviews.push(`
+                    <div class="container p-4 mb-5 rounded shadow-lg">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>${reviewData.review_date || ''}<small class="ml-2">by ${item.attributes.name}</small></h5>
+                                <h3>${restaurantData.name || ''}</h4>
+                                <h5>${restaurantData.district && (restaurantData.district.name || '')}</h5>
+                                <p>${restaurantData.address || ''}</p>
+                                ${cuisineBadges.join(' ')}
+                            </div>
+                            <div class="col-md-4">
+                                <img src="${restaurantData.image_url || ''}"
+                                    class="img-fluid rounded-lg float-md-right" />
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-md-8">
+                                <h4>${reviewData.title || ''}</h4>
+                                <p class="font-weight-lighter">${reviewData.comment || ''}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-striped table-hover">
+                                        <tr>
+                                            <th>Taste</th>
+                                            <td>${reviewData.rating_taste || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Deco</th>
+                                            <td>${reviewData.rating_decor || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Service</th>
+                                            <td>${reviewData.rating_service || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Hygiene</th>
+                                            <td>${reviewData.rating_hygiene || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Value</th>
+                                            <td>${reviewData.rating_value || ''}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                }
+                $("#reviews").html(reviews.join(''));
+            });
+        });
+        $('#user-searchbox').autoComplete({
+            formatResult: function (item) {
+                return {
+                    id: item.id,
+                    text: item.attributes.name,
+                };
+            },
+            minLength: 2,
+            resolverSettings: {
+                url: `/users/`,
+                queryKey: "search",
+            },
+            events: {
+                searchPost: function (resultFromServer) {
+                    return resultFromServer.data;
+                }
+            }
+        });
+    }, false);
+</script>
+<main role="main">
+    <div id="front-page" class="min-vh-100">
+
+    </div>
+    <div id="recommendations" class="d-lg-none">
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="recommendations-lg" class="col d-none d-lg-block">
+            </div>
+            <div id="reviews" class="col">
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
